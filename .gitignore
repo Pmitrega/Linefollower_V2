@@ -4,6 +4,7 @@ build/
 venv/
 /board/BOARD_v4/*
 /board/sensors/*
+3dmodels/
 !/board/BOARD_v4/BOARD_v4.kicad_pcb
 !/board/BOARD_v4/BOARD_v4.kicad_pro
 !/board/BOARD_v4/BOARD_v4.kicad_sch
