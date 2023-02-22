@@ -33,8 +33,8 @@ void save_to_eeprom(){
         write_uint16(BLACK_VALUES_ADDR + (uint8_t)(2*i), sensor_black_values[i]);
         for(int i =0; i<200000; i++){}//blocking for write to keep up
     }
-
 }
+
 void read_from_eeprom(){
     for(int i = 0; i<10; i++){
         sensor_white_values[i] = read_uint16(WHITE_VALUES_ADDR + 2*i);

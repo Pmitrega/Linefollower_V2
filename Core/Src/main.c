@@ -161,13 +161,9 @@ int main(void)
     HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
     HAL_Delay(200); 
   }
-  // desired_left = 30;
-  // desired_right = 20;
-  // uint8_t data = 10;
+  desired_left = 10;
+  desired_right = 10;
   uint8_t read_data;
-  // if(HAL_I2C_Mem_Write(&hi2c2, MEM_DEV_ADDR, MEM_ADDR, 1, &data, 1, 1000)!= HAL_OK){
-  //   HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
-  // }
   /* USER CODE END 2 */
 
   /* Infinite loop */

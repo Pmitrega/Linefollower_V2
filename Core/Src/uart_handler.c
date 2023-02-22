@@ -16,6 +16,11 @@ void handle_command(uint8_t cmd,int number){
 }
 int num_ready = 0;
 int num_pointer;
+
+/**
+* @brief Interpret command as letter and number, if there is no number as argument - can be used instead.
+* @param huart 
+*/
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
   if(recieve >= 'a' && recieve <= 'z'){
     num_ready = 1;

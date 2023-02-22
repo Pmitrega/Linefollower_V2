@@ -15,6 +15,7 @@
 #define RIGHT_I 0.2
 #define RIGHT_D 0
 
+//Value to scale PV for feedforward
 #define PWM_TO_VEL (1000/55)
 
 enum Motor{
