@@ -6,17 +6,17 @@
 /**
  * PID values
 */
-#define LEFT_P 10
+#define LEFT_P 0.7
 #define LEFT_I 0.2
 #define LEFT_D 0
 
 
-#define RIGHT_P 10
+#define RIGHT_P 0.7
 #define RIGHT_I 0.2
 #define RIGHT_D 0
 
 //Value to scale PV for feedforward
-#define PWM_TO_VEL (1000/55)
+#define PWM_TO_VEL (1000/5500)
 
 enum Motor{
     MOTOR_LEFT,

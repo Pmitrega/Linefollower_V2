@@ -37,6 +37,7 @@ BUILD_DIR = build
 # C sources
 C_SOURCES =  \
 Core/Src/fsm_handler.c \
+Core/Src/kalman_filter.c \
 Core/Src/main.c \
 Core/Src/memory.c \
 Core/Src/motors.c \

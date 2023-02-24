@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include "memory.h"
 #include "fsm_handler.h"
+#include "kalman_filter.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -49,6 +50,7 @@ I2C_HandleTypeDef hi2c2;
 
 TIM_HandleTypeDef htim3;
 TIM_HandleTypeDef htim4;
+TIM_HandleTypeDef htim5;
 TIM_HandleTypeDef htim9;
 TIM_HandleTypeDef htim10;
 TIM_HandleTypeDef htim11;
@@ -62,6 +64,7 @@ extern int desired_left;
 extern int desired_right;
 extern uint8_t recieve;
 extern uint16_t sensor_readings[10];
+int marker = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -76,6 +79,7 @@ static void MX_TIM4_Init(void);
 static void MX_TIM10_Init(void);
 static void MX_TIM11_Init(void);
 static void MX_TIM9_Init(void);
+static void MX_TIM5_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -95,10 +99,16 @@ static void MX_TIM9_Init(void);
 // }
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
+  static uint32_t counter = 0;
   /* Prevent unused argument(s) compilation warning */
+  if(htim == &htim5){
+    velocity_left = (int)update_kalman_left((float)ENCODER_LEFT);
+    velocity_right = (int)update_kalman_right((float)ENCODER_RIGHT);
+  }
   if(htim == &htim9){
-    update_velocity(50);
+
     pid_global();
+    counter+=1;
   }
 }
 /* USER CODE END 0 */
@@ -140,17 +150,19 @@ int main(void)
   MX_TIM10_Init();
   MX_TIM11_Init();
   MX_TIM9_Init();
+  MX_TIM5_Init();
   /* USER CODE BEGIN 2 */
   char buff[80];
-  int raw;
   int l;
   ENCODER_LEFT = 32000;
   ENCODER_RIGHT = 32000;
+
   HAL_TIM_PWM_Start(&htim10, TIM_CHANNEL_1);
   HAL_TIM_PWM_Start(&htim11, TIM_CHANNEL_1);
   HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL);
   HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_ALL);
   HAL_TIM_Base_Start_IT(&htim9);
+  HAL_TIM_Base_Start_IT(&htim5);
   HAL_GPIO_WritePin(STBY_GPIO_Port, STBY_Pin,1);
   HAL_ADC_Start_DMA(&hadc1,sensor_readings, 10);
   HAL_UART_Receive_IT(&huart1, &recieve, 1);
@@ -161,8 +173,10 @@ int main(void)
     HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
     HAL_Delay(200); 
   }
-  desired_left = 10;
-  desired_right = 10;
+  HAL_Delay(300);
+  marker = 5000;
+  desired_left = 2000;
+  desired_right = 2000;
   uint8_t read_data;
   /* USER CODE END 2 */
 
@@ -171,8 +185,8 @@ int main(void)
   while (1)
   {
     HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_12);
-    HAL_Delay(20);
-    l = sprintf(buff, "%d %d %d %d %d %d %d %d %d %d\n", sensor_readings[0], sensor_readings[1], sensor_readings[2], sensor_readings[3], sensor_readings[4], sensor_readings[5], sensor_readings[6], sensor_readings[7], sensor_readings[8], sensor_readings[9]);
+    HAL_Delay(100);
+    l = sprintf(buff, "vel;%d %d \n", velocity_left, velocity_right);
     HAL_UART_Transmit(&huart1, buff, l,100);
     /* USER CODE END WHILE */
 
@@ -488,6 +502,51 @@ static void MX_TIM4_Init(void)
   /* USER CODE BEGIN TIM4_Init 2 */
 
   /* USER CODE END TIM4_Init 2 */
+
+}
+
+/**
+  * @brief TIM5 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM5_Init(void)
+{
+
+  /* USER CODE BEGIN TIM5_Init 0 */
+
+  /* USER CODE END TIM5_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM5_Init 1 */
+
+  /* USER CODE END TIM5_Init 1 */
+  htim5.Instance = TIM5;
+  htim5.Init.Prescaler = 192 - 1;
+  htim5.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim5.Init.Period = 1000;
+  htim5.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim5.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim5) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim5, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim5, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM5_Init 2 */
+
+  /* USER CODE END TIM5_Init 2 */
 
 }
 

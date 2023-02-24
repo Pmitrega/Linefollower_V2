@@ -7,6 +7,8 @@ int velocity_left;
 int velocity_right;
 int desired_left = 0;
 int desired_right = 0;
+int global_control_left;
+int global_control_right;
 int set_PWM(enum Motor mot, uint16_t value){
     if(value>1000){
         return -1;
@@ -52,7 +54,12 @@ int set_control(enum Motor mot, int16_t value){
         value = 1000;
     if(value < -1000)
         value = -1000;
-
+    if(mot == MOTOR_LEFT){
+        global_control_left = (int)value;
+    }
+    else{
+        global_control_right = (int)value;
+    }
     if (value < 0)
         set_direction(mot, BACKWARD);
     else
@@ -90,14 +97,14 @@ void pid_left(){
     static float last_error = 0;
     float error = (float)desired_left - (float)velocity_left;
     integral +=error;
-    if(integral > 300){
-        integral = 300;
+    if(integral > 3000){
+        integral = 3000;
     }
-    else if (integral < -300)
+    else if (integral < -3000)
     {
-        integral = -300;
+        integral = -3000;
     }
-    float control_value = LEFT_P*error + PWM_TO_VEL*desired_left+ LEFT_I*integral + (error-last_error)*LEFT_D;
+    float control_value = LEFT_P*error + (float)PWM_TO_VEL*(float)desired_left+ LEFT_I*integral + (error-last_error)*LEFT_D;
     last_error = error;
     set_control(MOTOR_LEFT, (int)control_value);
 }
@@ -107,12 +114,12 @@ void pid_right(){
     static float last_error = 0;
     float error = (float)desired_right - (float)velocity_right;
     integral +=error;
-    if(integral > 300){
-        integral = 300;
+    if(integral > 3000){
+        integral = 3000;
     }
-    else if (integral < -300)
+    else if (integral < -3000)
     {
-        integral = -300;
+        integral = -3000;
     }
     float control_value = RIGHT_P*error+ PWM_TO_VEL*desired_right + RIGHT_I*integral + (error-last_error)*RIGHT_D;
     last_error = error;
