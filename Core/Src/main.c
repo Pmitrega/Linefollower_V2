@@ -25,6 +25,7 @@
 #include "memory.h"
 #include "fsm_handler.h"
 #include "kalman_filter.h"
+#include "sensors.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -97,6 +98,7 @@ static void MX_TIM5_Init(void);
 //   HAL_UART_Transmit(&huart1, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
 //   return ch;
 // }
+float angle;
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   static uint32_t counter = 0;
@@ -104,6 +106,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   if(htim == &htim5){
     velocity_left = (int)update_kalman_left((float)ENCODER_LEFT);
     velocity_right = (int)update_kalman_right((float)ENCODER_RIGHT);
+    angle = estimate_angle();
   }
   if(htim == &htim9){
 
@@ -111,6 +114,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     counter+=1;
   }
 }
+
+
 /* USER CODE END 0 */
 
 /**
@@ -168,6 +173,8 @@ int main(void)
   HAL_UART_Receive_IT(&huart1, &recieve, 1);
   HAL_Delay(10);
   update_counter();
+  HAL_Delay(10);
+  read_from_eeprom();
   all_handler(0,0);
   while(!HAL_GPIO_ReadPin(BUT1_GPIO_Port, BUT1_Pin)){
     HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);

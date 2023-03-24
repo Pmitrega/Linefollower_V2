@@ -3,12 +3,16 @@ build/
 .idea/
 venv/
 /board/BOARD_v4/*
+/board/BOARD_v4.1/*
 /board/sensors/*
 3dmodels/
 !/board/BOARD_v4/BOARD_v4.kicad_pcb
 !/board/BOARD_v4/BOARD_v4.kicad_pro
 !/board/BOARD_v4/BOARD_v4.kicad_sch
 !/board/BOARD_v4/BOARD_v4.pdf
+!/board/BOARD_v4.1/BOARD_v4.kicad_pcb
+!/board/BOARD_v4.1/BOARD_v4.kicad_pro
+!/board/BOARD_v4.1/BOARD_v4.kicad_sch
 !/board/sensors/sensors.kicad_pcb
 !/board/sensors/sensors.kicad_pro
 !/board/sensors/sensors.kicad_sch

@@ -3,6 +3,7 @@
 enum STATE current_state = STARTUP;
 extern UART_HandleTypeDef huart1;
 extern uint16_t sensor_readings[10];
+extern uint16_t sensor_readings_filt[10];
 extern uint16_t sensor_black_values[10];
 extern uint16_t sensor_white_values[10];
 extern int desired_left;
@@ -36,11 +37,11 @@ void sensor_auto_update_handler(uint8_t command, int number){
         state_selector_handler(0,0);
         break;
     case 'b':
-        update_black_values(sensor_readings);
+        update_black_values(sensor_readings_filt);
         get_black_values();
         break;
     case 'w':
-        update_white_values(sensor_readings);
+        update_white_values(sensor_readings_filt);
         get_white_values();
         break;
     case 's':

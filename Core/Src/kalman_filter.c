@@ -4,7 +4,7 @@
 #include "main.h"
 #define CONTROL_LEFT TIM11->CCR1 
 #define CONTROL_RIGHT TIM10->CCR1
-#define SOMESHIT_COEFFICIENT 40.f;
+#define SOMESHIT_COEFFICIENT 30.f;
 extern int velocity_left;
 extern int velocity_right;
 extern int global_control_left;
