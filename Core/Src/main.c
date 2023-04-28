@@ -26,6 +26,7 @@
 #include "fsm_handler.h"
 #include "kalman_filter.h"
 #include "sensors.h"
+#include "MPU6050.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -185,16 +186,34 @@ int main(void)
   desired_left = 2000;
   desired_right = 2000;
   uint8_t read_data;
+  uint8_t reading;
+  uint8_t uart_buffer[50];
+  MPU6050_SETTINGS MPU6050_sett;
+  MPU6050_default_setting(&MPU6050_sett);
+  MPU6050_sett.ACC_RANGE = MPU6050_ACC_2G;
+  MPU6050_sett.GYRO_RANGE = MPU6050_GYRO_1000DPS;
+  MPU6050_sett.DLPF = MPU6050_DLPF_5;
+  int accX;
+  int accY;
+  int accZ;
+  HAL_Delay(30);
+  MPU6050_wakeup();
+  HAL_Delay(5);
+  MPU6050_set_config(&MPU6050_sett);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_12);
-    HAL_Delay(100);
-    l = sprintf(buff, "vel;%d %d \n", velocity_left, velocity_right);
-    HAL_UART_Transmit(&huart1, buff, l,100);
+    HAL_Delay(10);
+    accX = MPU_get_gyro(X);
+    accY = MPU_get_gyro(Y);
+    accZ = MPU_get_gyro(Z);
+    l = sprintf(uart_buffer,"%d %d %d\n", accX, accY, accZ);
+    HAL_UART_Transmit(&huart1,uart_buffer, l, 1000);
+    // l = sprintf(buff, "vel;%d %d \n", velocity_left, velocity_right);
+    // HAL_UART_Transmit(&huart1, buff, l,100);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

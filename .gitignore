@@ -5,6 +5,7 @@ venv/
 /board/BOARD_v4/*
 /board/BOARD_v4.1/*
 /board/sensors/*
+/board/sensors_v2/*
 3dmodels/
 !/board/BOARD_v4/BOARD_v4.kicad_pcb
 !/board/BOARD_v4/BOARD_v4.kicad_pro
@@ -16,3 +17,6 @@ venv/
 !/board/sensors/sensors.kicad_pcb
 !/board/sensors/sensors.kicad_pro
 !/board/sensors/sensors.kicad_sch
+!/board/sensors_v2/sensors.kicad_pcb
+!/board/sensors_v2/sensors.kicad_pro
+!/board/sensors_v2/sensors.kicad_sch

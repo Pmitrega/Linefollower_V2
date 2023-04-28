@@ -66,7 +66,8 @@ Drivers/STM32F4xx_HAL_Driver/Src/memory.c \
 Drivers/STM32F4xx_HAL_Driver/Src/uart_handler.c \
 Drivers/STM32F4xx_HAL_Driver/Src/fsm_handler.c \
 Drivers/STM32F4xx_HAL_Driver/Src/sensors.c \
-Drivers/STM32F4xx_HAL_Driver/Src/kalman_filter.c
+Drivers/STM32F4xx_HAL_Driver/Src/kalman_filter.c \
+Drivers/STM32F4xx_HAL_Driver/Src/MPU6050.c
 # ASM sources
 # ASM sources# ASM sources# ASM sources# ASM sourcesASM_SOURCES =  \
 startup_stm32f411xe.s
